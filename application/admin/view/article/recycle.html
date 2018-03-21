@@ -1,0 +1,90 @@
+{extend name='base'/}
+{block name='content'}
+<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
+    <li>
+        <a href=""><i class="fa fa-cogs"></i>
+            文章管理</a>
+    </li>
+    <li class="active">
+        <a href="">回收站</a>
+    </li>
+</ol>
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#tab1">回收站</a></li>
+</ul>
+<form action="" method="post">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th width="5%">编号</th>
+                    <th>文章名称</th>
+                    <th>文章作者</th>
+                    <th width="5%">排序</th>
+                    <th>所属分类</th>
+                    <th>添加时间</th>
+                    <th width="200">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach name='field' item='vo'}
+                <tr>
+                    <td>{$vo['art_id']}</td>
+                    <td>{$vo['art_title']}</td>
+                    <td>{$vo['art_author']}</td>
+                    <td>
+                        <input type="text" class="form-control" value="{$vo['art_sort']}" onblur="changeSort(this,{$vo['art_id']})">
+                    </td>
+                    <td>{$vo['cate_name']}</td>
+                    <td>{$vo['sendtime']}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle">操作 <span class="caret"></span></button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="{:url('outToRecycle',['art_id'=>$vo['art_id']])}">恢复数据</a></li>
+                                <li class="divider"></li>
+                                <li><a href="javascript:;" onclick="dele({$vo['art_id']})">删除</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<div class="pagination pagination-sm pull-right">
+    {$field->render()}
+</div>
+<script>
+    //删除
+    function dele(art_id) {
+        var x=confirm('你确定要删除吗?');
+        if(x==true){
+            //alert("是的");
+           // location.href="{:url('admin/category/del',['cate_id'=>"+cate_id+"])}";
+           location.href = "{:url('del')}"+'?art_id='+art_id;
+        }
+    }
+    //修改排序
+    function changeSort(obj,art_id)
+    {
+        //获取修改完成之后的排序值
+        var art_sort = $(obj).val();
+//        alert(sort);
+//        alert(art_id);
+        $.post("{:url('changeSort')}",{art_sort:art_sort,art_id:art_id},function(res){
+            if(res.code)
+            {
+                //执行成功
+                util.message(res.msg,'refresh','success');
+            }else{
+                //执行失败
+                util.message(res.msg,'back','error');
+            }
+        },'json')
+    }
+</script>
+{/block}

@@ -1,0 +1,45 @@
+{extend name='base'/}
+{block name='content'}
+<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
+    <li>
+        <a href=""><i class="fa fa-cogs"></i>
+            网站管理</a>
+    </li>
+    <li class="active">
+        <a href="">网站配置</a>
+    </li>
+</ol>
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#tab1">网站配置</a></li>
+    <li class="active"><a href="{:url('add')}">添加配置</a></li>
+</ul>
+<form action="" method="post">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th >编号</th>
+                    <th >网站名称</th>
+                    <th >公司名称</th>
+                    <th >公司地址</th>
+                    <th >联系邮箱</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach name='field' item='vo'}
+                <tr>
+                    <td>{$vo['webset_id']}</td>
+                    <td>{$vo['website_name']}</td>
+                    <td>{$vo['company_name']}</td>
+                    <td>{$vo['company_address']}</td>
+                    <td>{$vo['company_email']}</td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+{/block}

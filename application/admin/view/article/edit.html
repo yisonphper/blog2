@@ -1,0 +1,125 @@
+{extend name='base'/}
+{block name='content'}
+<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
+    <li>
+        <a href=""><i class="fa fa-cogs"></i>
+            文章管理</a>
+    </li>
+    <li class="active">
+        <a href="">文章编辑</a>
+    </li>
+</ol>
+<ul class="nav nav-tabs" role="tablist">
+    <li><a href="{:url('index')}">文章管理</a></li>
+    <li class="active"><a href="">文章编辑</a></li>
+</ul>
+<form class="form-horizontal" id="form"  action="" method="post">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">文章管理</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">文章标题</label>
+                <div class="col-sm-9">
+                    <input type="text" name="art_title"  class="form-control" placeholder="" value="{$oldData['art_title']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">文章作者</label>
+                <div class="col-sm-9">
+                    <input type="text" name="art_author"  class="form-control" placeholder="" value="{$oldData['art_author']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">文章排序</label>
+                <div class="col-sm-9">
+                    <input type="number" name="art_sort"  class="form-control" placeholder="" value="{$oldData['art_sort']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">所属分类</label>
+                <div class="col-sm-9">
+                    <select class="js-example-basic-single form-control" name="cate_id">
+                        <option value="0">请选择分类</option>
+                        {foreach name='cateData' item='vo'}
+                        <option {if condition="$oldData['cate_id']==$vo['cate_id']"}selected{/if} value="{$vo['cate_id']}">{$vo['_cate_name']}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">标签</label>
+                <div class="col-sm-9">
+                    {foreach name='tagData' item='vo'}
+                    <label class="checkbox-inline">
+                        <input {if condition="in_array($vo['tag_id'],$tag_ids)"}checked{/if} type="checkbox" name="tag[]" value="{$vo['tag_id']}"> {$vo['tag_name']}
+                    </label>
+                    {/foreach}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">缩略图</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input type="file" name="art_thumb" onchange="previewFile()" value="{$oldData['art_thumb']}">     
+                    </div>
+                    <div class="input-group" style="margin-top:5px;">
+                        <img src="__STATIC__/uploads/{$oldData['art_thumb']}" class="img-responsive img-thumbnail" width="150">
+                        <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="removeImg(this)">×</em>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">文章摘要</label>
+                <div class="col-sm-9">
+                    <textarea type="text" name="art_digest"  class="form-control" placeholder="文章摘要">{$oldData['art_digest']}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for=""  class="col-sm-2 control-label">文章内容</label>
+                <div class="col-sm-9">
+                    <textarea id="container" name="art_content" style="height:300px;width:100%;">{$oldData['art_content']}</textarea>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="art_id" value="{:input('param.art_id')}">
+    <button class="btn btn-primary" type="submit">确定</button>
+</form>
+<script>
+    //显示图片
+    function previewFile() {
+        var preview = document.querySelector('.img-thumbnail');
+        var file    = document.querySelector('input[type=file]').files[0];
+       
+        // 判断图片格式  
+        if( /\.(jpe?g|png|gif)$/i.test(file.name)){  
+            var reader  = new FileReader();
+            if (file) {
+                //通过FileReader的readAsDataURL方法，我们可以不经过后台，直接将本地图片显示在页面上。这样做可以减少前后端频繁的交互过程，减少服务器端无用的图片资源
+                reader.readAsDataURL(file);
+                var filepath = $("input[type=file]").val();
+                //console.log("mingcheng:",filepath);
+
+                reader.onload = function(){
+                    preview.src = reader.result;
+                    //console.log("shuju:",reader.result);
+                    // ajax 上传图片
+                    $.post("{:url('admin/article/upload')}",{file: reader.result,filepath: filepath},'json');
+                }
+            } 
+        }else{
+            alert('图片只能是jpg,gif,png');
+            $("input[type=file]").val('');
+        }
+    }
+    
+    //移除图片
+    function removeImg(obj) {
+        $(obj).prev('img').attr('src', 'resource/images/nopic.jpg');
+        $(obj).parent().prev().find('input').val('');
+    }
+</script>
+{/block}

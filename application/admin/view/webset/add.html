@@ -1,0 +1,50 @@
+{extend name='base'/}
+{block name='content'}
+<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
+    <li>
+        <a href=""><i class="fa fa-cogs"></i>
+            网站管理</a>
+    </li>
+    <li class="active">
+        <a href="">网站配置</a>
+    </li>
+</ol>
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="{:url('index')}">网站配置</a></li>
+    <li class="active"><a href="">添加配置</a></li>
+</ul>
+<form action="" method="post" role="form">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">网站名称</label>
+                <div class="col-sm-9">
+                    <input type="text" id="website_name"  class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">公司名称</label>
+                <div class="col-sm-9">
+                <input type="text" id="company_name" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">公司地址</label>
+                <div class="col-sm-9">
+                <input type="text" id="company_address" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">联系邮箱</label>
+                <div class="col-sm-9">
+                <input type="text" id="company_email" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">确定</button>
+</form>
+{/block}
